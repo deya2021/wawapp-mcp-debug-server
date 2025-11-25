@@ -1,0 +1,29 @@
+{
+  "dev": {
+    "projectId": "wawapp-952d6",
+    "serviceAccountPath": "./config/dev-service-account.json",
+    "maxTimeRangeDays": 7,
+    "rateLimit": {
+      "perTool": 10,
+      "global": 100
+    }
+  },
+  "staging": {
+    "projectId": "wawapp-staging",
+    "serviceAccountPath": "./config/staging-service-account.json",
+    "maxTimeRangeDays": 7,
+    "rateLimit": {
+      "perTool": 10,
+      "global": 100
+    }
+  },
+  "prod": {
+    "projectId": "wawapp-prod",
+    "serviceAccountPath": "./config/prod-service-account.json",
+    "maxTimeRangeDays": 3,
+    "rateLimit": {
+      "perTool": 5,
+      "global": 50
+    }
+  }
+}
