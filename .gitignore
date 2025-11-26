@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files
+.env
+
+# Logs
+logs/
+*.log
+
+# Firebase service accounts (CRITICAL: Never commit these)
+config/*-service-account.json
+config/dev-service-account.json
+config/staging-service-account.json
+config/prod-service-account.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/

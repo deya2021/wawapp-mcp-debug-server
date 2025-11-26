@@ -1,0 +1,60 @@
+{
+  "orders": {
+    "collection": "orders",
+    "fields": {
+      "status": "status",
+      "assignedDriverId": "assignedDriverId",
+      "driverId": "driverId",
+      "ownerId": "ownerId",
+      "createdAt": "createdAt",
+      "updatedAt": "updatedAt",
+      "completedAt": "completedAt",
+      "expiredAt": "expiredAt",
+      "pickup": "pickup",
+      "dropoff": "dropoff",
+      "price": "price",
+      "distanceKm": "distanceKm",
+      "pickupAddress": "pickupAddress",
+      "dropoffAddress": "dropoffAddress",
+      "driverRating": "driverRating",
+      "ratedAt": "ratedAt"
+    }
+  },
+  "drivers": {
+    "collection": "drivers",
+    "fields": {
+      "isVerified": "isVerified",
+      "isOnline": "isOnline",
+      "city": "city",
+      "region": "region",
+      "vehicleType": "vehicleType",
+      "vehiclePlate": "vehiclePlate",
+      "vehicleColor": "vehicleColor",
+      "name": "name",
+      "phone": "phone",
+      "rating": "rating",
+      "totalTrips": "totalTrips",
+      "createdAt": "createdAt",
+      "updatedAt": "updatedAt"
+    }
+  },
+  "users": {
+    "collection": "users",
+    "fields": {
+      "name": "name",
+      "phone": "phone",
+      "fcmToken": "fcmToken",
+      "createdAt": "createdAt",
+      "updatedAt": "updatedAt"
+    }
+  },
+  "driverLocations": {
+    "collection": "driver_locations",
+    "fields": {
+      "lat": "lat",
+      "lng": "lng",
+      "accuracy": "accuracy",
+      "timestamp": "timestamp"
+    }
+  }
+}
