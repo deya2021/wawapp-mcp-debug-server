@@ -9,6 +9,7 @@
 
 import { functionExecutionTrace } from './function-execution-trace.js';
 import { functionHealthCheck } from './function-health-check.js';
+import { schedulerStatus, schedulerStatusSchema } from './scheduler-status.js';
 
 // Tool: wawapp_function_execution_trace
 export const functionExecutionTraceSchema = {
@@ -95,4 +96,7 @@ Example:
 };
 
 // Export tool handlers
-export { functionExecutionTrace, functionHealthCheck };
+export { functionExecutionTrace, functionHealthCheck, schedulerStatus };
+
+// Export schedulerStatusSchema (imported above)
+export { schedulerStatusSchema };

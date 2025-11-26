@@ -56,5 +56,16 @@
       "accuracy": "accuracy",
       "timestamp": "timestamp"
     }
+  },
+  "app_logs": {
+    "collection": "app_logs",
+    "fields": {
+      "uid": "uid",
+      "message": "message",
+      "extra": "extra",
+      "source": "source",
+      "level": "level",
+      "createdAt": "createdAt"
+    }
   }
 }

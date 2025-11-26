@@ -2,6 +2,8 @@
 
 Read-only debugging server for WawApp Firebase/Flutter ecosystem using Model Context Protocol (MCP).
 
+**33 production-ready debugging tools** across 8 specialized kits for comprehensive system observability.
+
 ## Quick Start
 
 ### Prerequisites
@@ -85,9 +87,9 @@ Add to your Claude Desktop MCP configuration:
 
 ---
 
-## Available Tools
+## Available Tools (33 Total)
 
-### Kit 1: Order Lifecycle Inspector
+### Kit 1: Order Lifecycle Inspector (4 tools)
 
 **`wawapp_order_trace`** - Full order timeline
 Trace complete lifecycle of an order including status transitions, driver assignments, and timeline.
@@ -99,9 +101,42 @@ Trace complete lifecycle of an order including status transitions, driver assign
 }
 ```
 
+**`wawapp_order_search`** - Search and filter orders
+Search orders by multiple criteria: status, driver/client, price range, city/region, time range with pagination.
+
+```json
+{
+  "status": "matching",
+  "city": "Khartoum",
+  "timeRangeMinutes": 1440,
+  "limit": 50
+}
+```
+
+**`wawapp_order_anomalies`** - Detect stuck/problematic orders
+Proactively detect orders with issues: stuck in matching >10min, invalid coordinates, missing timestamps, data inconsistencies.
+
+```json
+{
+  "timeRangeMinutes": 1440,
+  "includeExpired": false,
+  "limit": 200
+}
+```
+
+**`wawapp_order_stats`** - Aggregate order statistics
+Comprehensive order analytics: financial metrics, completion rates, timing analysis, engagement metrics.
+
+```json
+{
+  "timeRangeMinutes": 1440,
+  "groupBy": "status"
+}
+```
+
 ---
 
-### Kit 2: Driver Matching Diagnostics ⭐ CRITICAL
+### Kit 2: Driver Matching Diagnostics (5 tools) ⭐ CRITICAL
 
 **`wawapp_driver_eligibility`** - Check driver requirements
 Comprehensive check of driver eligibility for order matching: verification status, profile completeness, online status, location validity.
@@ -122,6 +157,311 @@ Simulate the exact orders a driver should see based on their current location an
 }
 ```
 
+**`wawapp_order_visibility`** - Debug why order not visible to driver
+Detailed diagnostics on why a specific order isn't visible to a specific driver with pass/fail checks.
+
+```json
+{
+  "orderId": "order_abc123",
+  "driverId": "driver_xyz"
+}
+```
+
+**`wawapp_nearby_drivers`** - Find drivers near a location
+Find all drivers within a radius of a location, with distance and eligibility analysis.
+
+```json
+{
+  "lat": 15.5007,
+  "lng": 32.5599,
+  "radiusKm": 10.0,
+  "onlineOnly": true,
+  "verifiedOnly": true
+}
+```
+
+**`wawapp_matching_performance`** - Matching algorithm performance
+Analyze matching performance metrics: success rates, response times, P95 metrics, driver statistics.
+
+```json
+{
+  "timeRangeMinutes": 1440,
+  "groupBy": "region"
+}
+```
+
+---
+
+### Kit 3: Data Quality & Diagnostics (3 tools)
+
+**`wawapp_data_audit`** - Data consistency verification
+Verify data integrity across collections: orphaned records, missing references, invalid data.
+
+```json
+{
+  "collection": "orders",
+  "checkType": "all",
+  "limit": 500
+}
+```
+
+**`wawapp_backend_simulator`** - Simulate backend operations
+Simulate backend operations for testing: order creation, driver matching, notifications.
+
+```json
+{
+  "operation": "matchOrder",
+  "params": {
+    "orderId": "order_abc123"
+  }
+}
+```
+
+**`wawapp_log_analyzer`** - Log analysis and pattern detection
+Analyze Cloud Logging for patterns, errors, and anomalies with severity breakdown.
+
+```json
+{
+  "timeRangeMinutes": 60,
+  "severity": "ERROR",
+  "resource": "cloud_function",
+  "limit": 100
+}
+```
+
+---
+
+### Kit 4: Real-time Location Intelligence (3 tools)
+
+**`wawapp_driver_location_status`** - Driver location health check
+Comprehensive location health check: exists, valid coordinates, fresh (<5min), accurate (<50m).
+
+```json
+{
+  "driverId": "driver_xyz"
+}
+```
+
+**`wawapp_location_density_heatmap`** - Geographic distribution analysis
+Analyze driver and order density by region with supply/demand ratio calculation.
+
+```json
+{
+  "region": "Khartoum",
+  "radiusKm": 20.0,
+  "includeOrders": true,
+  "includeDrivers": true
+}
+```
+
+**`wawapp_trip_route_analyzer`** - Analyze completed trip routes
+Analyze trip routes for anomalies: distance comparison, duration analysis, detour detection.
+
+```json
+{
+  "orderId": "order_abc123"
+}
+```
+
+---
+
+### Kit 5: Notification Delivery Tracker (4 tools)
+
+**`wawapp_fcm_token_status`** - FCM token health check
+Check FCM token validity and health status for a user.
+
+```json
+{
+  "userId": "user_xyz",
+  "userType": "driver"
+}
+```
+
+**`wawapp_notification_trace`** - Order notification timeline
+Trace all notifications sent for an order with delivery status and timing.
+
+```json
+{
+  "orderId": "order_abc123"
+}
+```
+
+**`wawapp_notification_delivery_check`** - Comprehensive delivery diagnostics
+Full notification delivery check: token validity, permissions, device status, recent deliveries.
+
+```json
+{
+  "userId": "user_xyz",
+  "userType": "driver"
+}
+```
+
+**`wawapp_notification_batch_check`** - Bulk notification health check
+Scan multiple users for notification health with aggregated statistics.
+
+```json
+{
+  "userType": "drivers",
+  "limit": 100,
+  "onlineOnly": true
+}
+```
+
+---
+
+### Kit 6: Cloud Function Execution Observer (3 tools)
+
+**`wawapp_function_execution_trace`** - Function execution analysis
+Trace Cloud Function executions with timing, errors, and performance metrics.
+
+```json
+{
+  "functionName": "expireStaleOrders",
+  "timeRangeMinutes": 60,
+  "includeErrors": true
+}
+```
+
+**`wawapp_function_health_check`** - System-wide function health
+Health check for all Cloud Functions with execution rates and error rates.
+
+```json
+{
+  "timeRangeMinutes": 60
+}
+```
+
+**`wawapp_scheduler_status`** - Cloud Scheduler jobs status
+Check status of scheduled jobs with inferred health from system behavior.
+
+```json
+{
+  "jobName": "expireStaleOrders"
+}
+```
+
+---
+
+### Kit 7: System Health Dashboard (5 tools)
+
+**`wawapp_system_health`** - Comprehensive system overview
+System-wide health check: orders, drivers, clients, performance metrics with health status.
+
+```json
+{
+  "timeRangeMinutes": 60
+}
+```
+
+**`wawapp_active_users`** - Active user tracking
+Track active users (drivers and clients) with engagement metrics.
+
+```json
+{
+  "timeRangeMinutes": 60,
+  "userType": "all"
+}
+```
+
+**`wawapp_performance_trends`** - Historical performance analysis
+Analyze performance trends over time with period comparison and trend detection.
+
+```json
+{
+  "timeRangeMinutes": 1440,
+  "compareWithPrevious": true
+}
+```
+
+**`wawapp_error_rate_monitor`** - System-wide error detection
+Monitor system-wide errors with severity categorization and health status.
+
+```json
+{
+  "timeRangeMinutes": 60,
+  "limit": 200
+}
+```
+
+**`wawapp_incident_report`** - Unified incident diagnostics
+Comprehensive cross-system diagnostic that aggregates signals from auth, app flow, location, matching, notifications to provide prioritized root cause analysis.
+
+```json
+{
+  "uid": "driver_abc123",
+  "orderId": "order_xyz789",
+  "timeRangeMinutes": 1440,
+  "includeDeepDiagnostics": true
+}
+```
+
+---
+
+### Kit 8: Auth & App Flow Diagnostics (6 tools)
+
+**`wawapp_auth_session_check`** - Auth session health check
+Check auth session consistency across Firebase Auth, custom claims, and Firestore documents.
+
+```json
+{
+  "uid": "driver_abc123",
+  "includeDetails": true
+}
+```
+
+**`wawapp_auth_flow_audit`** - Auth flow timeline audit
+Build timeline of auth flow events: OTP, PIN, profile creation, onboarding completion.
+
+```json
+{
+  "uid": "driver_abc123",
+  "timeRangeMinutes": 1440,
+  "limit": 200
+}
+```
+
+**`wawapp_auth_loop_detector`** - Detect auth-related infinite loops
+Detect AuthGate rebuild loops, PIN loops, and other auth-related infinite loops from logs.
+
+```json
+{
+  "timeRangeMinutes": 60,
+  "uid": "driver_abc123",
+  "minRepetitions": 100
+}
+```
+
+**`wawapp_route_loop_diagnoser`** - Navigation/route loop detection
+Detect navigation loops like nearby → onboarding → nearby from navigation logs.
+
+```json
+{
+  "uid": "driver_abc123",
+  "timeRangeMinutes": 120,
+  "maxSequenceLength": 50
+}
+```
+
+**`wawapp_pin_flow_checker`** - PIN flow state validation
+Audit PIN flow state: check hasPin, pinHash, pinSalt consistency and recent attempts.
+
+```json
+{
+  "uid": "driver_abc123",
+  "includeAttempts": true
+}
+```
+
+**`wawapp_multi_device_session_audit`** - Multi-device session conflicts
+Check for multi-device session issues and conflicting states across devices.
+
+```json
+{
+  "uid": "driver_abc123",
+  "timeRangeMinutes": 1440
+}
+```
+
 ---
 
 ## Example Usage
@@ -139,6 +479,7 @@ Can you diagnose why?
 
 1. `wawapp_driver_eligibility` → Check all requirements
 2. `wawapp_driver_view_orders` → Show what driver should see
+3. `wawapp_driver_location_status` → Check location health
 
 **Expected output**:
 
@@ -146,10 +487,12 @@ Can you diagnose why?
 The driver cannot see orders because:
 - isVerified: false (driver not verified by admin)
 - Profile incomplete: missing "city" and "region"
+- Location: stale (last updated 15 minutes ago)
 
 Action required:
 1. Admin must set isVerified=true in /drivers/driver_abc123
 2. Driver must complete onboarding (add city and region)
+3. Driver should restart app to refresh location
 ```
 
 ---
@@ -179,6 +522,116 @@ Duration:
 - Total: 45m 0s
 - matchingToAccepted: 2m 15s
 - acceptedToCompleted: 42m 45s
+```
+
+---
+
+### Example 3: "Why isn't a specific order visible to a driver?"
+
+**User prompt to AI**:
+
+```
+Order xyz789 is in matching status but driver abc123 can't see it. Why?
+```
+
+**AI will use**:
+
+1. `wawapp_order_visibility` → Detailed diagnostics
+
+**Expected output**:
+
+```
+Order xyz789 visibility check for driver abc123:
+
+✓ Order exists and status is "matching"
+✓ Driver is verified
+✓ Driver profile is complete
+✗ Driver is OFFLINE (last seen 2 hours ago)
+✗ Distance: 12.3 km (exceeds 6 km radius)
+
+Root cause: Driver is offline and too far from pickup location.
+
+Recommendations:
+1. Driver must go online
+2. Driver should move closer to Khartoum central area
+```
+
+---
+
+### Example 4: "Find stuck orders"
+
+**User prompt to AI**:
+
+```
+Find all orders that might be stuck or have problems
+```
+
+**AI will use**:
+
+1. `wawapp_order_anomalies` → Detect problematic orders
+
+**Expected output**:
+
+```
+Found 5 anomalies in last 24 hours:
+
+CRITICAL (3):
+- Order abc123: Stuck in matching for 25 minutes
+- Order def456: Invalid pickup coordinates (0, 0)
+- Order ghi789: Missing createdAt timestamp
+
+WARNING (2):
+- Order jkl012: Completed but missing completedAt
+- Order mno345: Invalid price (0 SDG)
+
+Recommendations:
+- Check expireStaleOrders Cloud Function
+- Add validation in order creation flow
+```
+
+---
+
+### Example 5: "System health check"
+
+**User prompt to AI**:
+
+```
+Give me a comprehensive system health report
+```
+
+**AI will use**:
+
+1. `wawapp_system_health` → Overall health metrics
+2. `wawapp_error_rate_monitor` → Error detection
+3. `wawapp_performance_trends` → Performance analysis
+
+**Expected output**:
+
+```
+System Health Report (Last 1 hour):
+
+Overall Status: HEALTHY
+
+Orders:
+- Total: 247 (↑ 12% vs previous hour)
+- Active: 18
+- Completed: 215 (87% completion rate)
+- Expired: 14
+
+Drivers:
+- Total: 156
+- Online: 45 (29%)
+- Verified: 142 (91%)
+
+Performance:
+- Avg matching time: 3.2 minutes (↓ 8% - improving)
+- Avg trip duration: 22 minutes
+- Rating rate: 78%
+
+Error Rate: 2.4% (5 critical errors detected)
+
+Top Issue: 3 orders stuck in matching >10min
+Recommendation: Check expireStaleOrders scheduler
 ```
 
 ---
@@ -268,11 +721,77 @@ MIT License
 
 ---
 
-## Next Steps
+## Tool Selection Guide
 
-1. Add more tools from Kits 3-7 (see Phase 2 design for complete list)
-2. Add notification tracing (Kit 5)
-3. Add Cloud Function observability (Kit 6)
-4. Add system health dashboard (Kit 7)
+Choose tools based on your debugging scenario:
 
-For complete tool specifications, see `docs/PHASE_2_DESIGN.md`.
+| Symptom | Recommended Tools |
+|---------|------------------|
+| "Driver can't see orders" | `wawapp_driver_eligibility`, `wawapp_driver_view_orders`, `wawapp_driver_location_status` |
+| "Order stuck in matching" | `wawapp_order_trace`, `wawapp_order_anomalies`, `wawapp_nearby_drivers` |
+| "Specific order not showing" | `wawapp_order_visibility`, `wawapp_order_trace` |
+| "Notifications not received" | `wawapp_fcm_token_status`, `wawapp_notification_delivery_check`, `wawapp_notification_trace` |
+| "System performance issues" | `wawapp_system_health`, `wawapp_performance_trends`, `wawapp_error_rate_monitor` |
+| "Find problematic orders" | `wawapp_order_anomalies`, `wawapp_order_search` |
+| "Trip took too long" | `wawapp_trip_route_analyzer`, `wawapp_order_trace` |
+| "No drivers in area" | `wawapp_nearby_drivers`, `wawapp_location_density_heatmap` |
+| "Cloud Functions not running" | `wawapp_function_health_check`, `wawapp_scheduler_status`, `wawapp_function_execution_trace` |
+| "Data quality issues" | `wawapp_data_audit`, `wawapp_order_anomalies`, `wawapp_error_rate_monitor` |
+| **"User stuck on Auth screen"** | `wawapp_auth_session_check`, `wawapp_auth_flow_audit` |
+| **"App looping infinitely"** | `wawapp_auth_loop_detector`, `wawapp_route_loop_diagnoser` |
+| **"User bouncing between screens"** | `wawapp_route_loop_diagnoser`, `wawapp_auth_flow_audit` |
+| **"PIN not working"** | `wawapp_pin_flow_checker`, `wawapp_auth_session_check` |
+| **"Auth issues with multiple devices"** | `wawapp_multi_device_session_audit`, `wawapp_auth_session_check` |
+| **"User stuck in onboarding"** | `wawapp_auth_flow_audit`, `wawapp_auth_session_check` |
+| **"AuthGate rebuild loop"** | `wawapp_auth_loop_detector`, `wawapp_auth_flow_audit` |
+| **"Need full diagnostic report"** | `wawapp_incident_report` (comprehensive first-line diagnostic) |
+| **"Unknown user issue"** | `wawapp_incident_report` (aggregates all subsystems) |
+
+---
+
+## Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     AI Client (Claude)                       │
+└──────────────────────┬──────────────────────────────────────┘
+                       │ MCP Protocol
+┌──────────────────────▼──────────────────────────────────────┐
+│                  MCP Debug Server                            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Security Layer (Rate Limiting, PII Masking, Audit)  │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │         33 Tools across 8 Kits                       │   │
+│  │  - Order Lifecycle (4)    - Location Intelligence (3) │   │
+│  │  - Driver Matching (5)    - Notifications (4)        │   │
+│  │  - Data Quality (3)       - Cloud Functions (3)      │   │
+│  │  - System Health (5)      - Auth & App Flow (6)     │   │
+│  └──────────────────────────────────────────────────────┘   │
+└──────────────────────┬──────────────────────────────────────┘
+                       │ Firebase Admin SDK
+┌──────────────────────▼──────────────────────────────────────┐
+│              Firebase/Firestore (Read-Only)                  │
+│  - orders          - driver_locations                        │
+│  - drivers         - notifications                           │
+│  - users           - Cloud Logging                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Deployment Status
+
+**Current Version**: 1.2.0
+**Status**: Production Ready
+**Tools**: 33/33 (100% Complete)
+**Kits**: 8
+**Build Status**: Passing
+
+All 33 debugging tools are implemented, tested, and ready for production use.
+
+**New in v1.2.0**: Added `wawapp_incident_report` - a unified meta-tool that aggregates signals from all subsystems for comprehensive first-line diagnostics.
+
+**v1.1.0**: Kit 8 adds 6 tools for auth & app flow diagnostics (infinite loop detection, auth session consistency, PIN flow validation, multi-device conflicts).
+
+For detailed tool specifications, see `COMPLETE_TOOLSET_PLAN.md`.

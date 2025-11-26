@@ -10,6 +10,7 @@
 import { fcmTokenStatus } from './fcm-token-status.js';
 import { notificationTrace } from './notification-trace.js';
 import { notificationDeliveryCheck } from './notification-delivery-check.js';
+import { notificationBatchCheck, notificationBatchCheckSchema } from './notification-batch-check.js';
 
 // Tool: wawapp_fcm_token_status
 export const fcmTokenStatusSchema = {
@@ -128,4 +129,7 @@ Example:
 };
 
 // Export tool handlers
-export { fcmTokenStatus, notificationTrace, notificationDeliveryCheck };
+export { fcmTokenStatus, notificationTrace, notificationDeliveryCheck, notificationBatchCheck };
+
+// Export notificationBatchCheckSchema (imported above)
+export { notificationBatchCheckSchema };

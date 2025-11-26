@@ -9,6 +9,9 @@
 
 import { systemHealth } from './system-health.js';
 import { activeUsers } from './active-users.js';
+import { performanceTrends, performanceTrendsSchema } from './performance-trends.js';
+import { errorRateMonitor, errorRateMonitorSchema } from './error-rate-monitor.js';
+import { incidentReport, incidentReportSchema } from './incident-report.js';
 
 // Tool: wawapp_system_health
 export const systemHealthSchema = {
@@ -92,4 +95,7 @@ Example:
 };
 
 // Export tool handlers
-export { systemHealth, activeUsers };
+export { systemHealth, activeUsers, performanceTrends, errorRateMonitor, incidentReport };
+
+// Export schemas
+export { performanceTrendsSchema, errorRateMonitorSchema, incidentReportSchema };
