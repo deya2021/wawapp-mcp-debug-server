@@ -1,0 +1,64 @@
+# Driver Scenario: Go Online and Receive Orders
+# Validates that driver can successfully go online and is eligible for matching
+
+scenarioId: DRV-001
+category: DRIVER
+title: "Driver goes online and receives first order"
+
+description: |
+  Validates that a driver can successfully go online and is eligible to receive
+  nearby orders. Checks profile completeness, verification status, online state,
+  and location freshness.
+
+  Success criteria:
+  - Driver profile complete (name, phone, city, region)
+  - Driver verified by admin
+  - Driver online
+  - Location fresh (<5 minutes)
+
+inputs:
+  driverId:
+    type: string
+    required: true
+    description: "Driver UID from Firebase Auth"
+
+checks:
+  # Check 1: Profile completeness and verification
+  - atom: driver_profile_audit
+    params:
+      driverId: "$inputs.driverId"
+    successCriteria:
+      - PROFILE_COMPLETE
+      - DRIVER_VERIFIED
+
+  # Check 2: Location freshness
+  - atom: driver_location_freshness
+    params:
+      driverId: "$inputs.driverId"
+      maxAgeMinutes: 5
+    successCriteria:
+      - LOCATION_FRESH
+
+  # Check 3: Online state
+  - atom: driver_online_state
+    params:
+      driverId: "$inputs.driverId"
+    successCriteria:
+      - DRIVER_ONLINE
+
+successMarkers:
+  - "All checks passed"
+  - "Driver is eligible to receive nearby orders"
+  - "Driver appears in online drivers pool"
+
+failureMappings:
+  PROFILE_MISSING:name: FAIL-005
+  PROFILE_MISSING:phone: FAIL-006
+  PROFILE_MISSING:city: FAIL-007
+  PROFILE_MISSING:region: FAIL-007
+  LOCATION_STALE: FAIL-008
+  LOCATION_MISSING: FAIL-009
+  LOCATION_INVALID_COORDS: FAIL-016
+  DRIVER_OFFLINE: FAIL-012
+  DRIVER_NOT_VERIFIED: FAIL-003
+  DRIVER_NOT_FOUND: FAIL-004

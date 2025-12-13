@@ -1,0 +1,77 @@
+{
+  "scenarioId": "FAIL-REAL-001",
+  "status": "FAIL",
+  "summary": "Scenario FAIL-REAL-001 FAILED: 2 of 3 checks failed",
+  "blockingReasons": [
+    {
+      "ruleId": "PROFILE_MISSING:name",
+      "severity": "CRITICAL",
+      "message": "Driver profile is missing required field: name",
+      "evidencePath": "/drivers/driver_missing_name",
+      "field": "name"
+    },
+    {
+      "ruleId": "LOCATION_STALE",
+      "severity": "CRITICAL",
+      "message": "Driver location is stale (last updated 420.0 minutes ago, threshold: 5 minutes)",
+      "evidencePath": "/driver_locations/driver_missing_name"
+    }
+  ],
+  "evidence": [
+    {
+      "key": "profile.name",
+      "expected": "non-empty string",
+      "actual": null,
+      "sourcePath": "/drivers/driver_missing_name"
+    },
+    {
+      "key": "location.age",
+      "expected": "<= 5 minutes",
+      "actual": "420 minutes",
+      "sourcePath": "/driver_locations/driver_missing_name"
+    }
+  ],
+  "suggestedFixes": [
+    {
+      "fixId": "FIX_ADD_REQUIRED_FIELD",
+      "description": "Add missing field 'name' to driver profile at /drivers/driver_missing_name",
+      "targetPath": "/drivers/driver_missing_name",
+      "action": "SET"
+    },
+    {
+      "fixId": "FIX_RESTART_LOCATION_TRACKING",
+      "description": "Driver location is stale. Ask driver to: 1) Check location permissions, 2) Restart app, 3) Verify GPS is enabled",
+      "targetPath": "/driver_locations/driver_missing_name",
+      "action": "MANUAL"
+    }
+  ],
+  "linkedFailures": [
+    {
+      "failureId": "FAIL-005",
+      "title": "Driver profile incomplete",
+      "likelihood": "HIGH"
+    },
+    {
+      "failureId": "FAIL-008",
+      "title": "Location tracking stale or stopped",
+      "likelihood": "HIGH"
+    }
+  ],
+  "checks": [
+    {
+      "atomName": "driver_profile_audit",
+      "passed": false
+    },
+    {
+      "atomName": "driver_location_freshness",
+      "passed": false
+    },
+    {
+      "atomName": "matching_rule_trace",
+      "passed": true
+    }
+  ],
+  "passedChecks": 1,
+  "totalChecks": 3,
+  "overallPass": false
+}

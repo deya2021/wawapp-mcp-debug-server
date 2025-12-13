@@ -1,0 +1,32 @@
+{
+  "scenarioId": "FAIL-015",
+  "status": "INCONCLUSIVE",
+  "summary": "Scenario FAIL-015 INCONCLUSIVE: 1 of 1 checks inconclusive",
+  "blockingReasons": [],
+  "evidence": [
+    {
+      "key": "permission.serverSideAccess",
+      "expected": "client-side security rules test",
+      "actual": "server-side admin SDK (bypasses rules)",
+      "sourcePath": "/drivers/driver_complete"
+    }
+  ],
+  "suggestedFixes": [
+    {
+      "fixId": "FIX_CHECK_SECURITY_RULES",
+      "description": "Manually verify Firestore security rules for /drivers/driver_complete allow read for principal driver_complete",
+      "action": "MANUAL"
+    }
+  ],
+  "linkedFailures": [],
+  "checks": [
+    {
+      "atomName": "permission_rule_probe",
+      "passed": false
+    }
+  ],
+  "passedChecks": 0,
+  "totalChecks": 1,
+  "overallPass": false,
+  "note": "Permission probe returns INCONCLUSIVE when using admin SDK (cannot test client-side rules)"
+}

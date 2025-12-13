@@ -1,0 +1,62 @@
+# Function Timeout or Error Scenario
+# Detects when Cloud Function times out or fails
+
+scenarioId: FAIL-006
+category: FAILURE
+title: "Cloud Function timeout or error during order processing"
+
+description: |
+  Detects when Cloud Function fails to execute or times out.
+  This can prevent critical operations like notifications, order expiration, etc.
+
+  Common causes:
+  - Function timeout (default: 60s)
+  - Unhandled exceptions in function code
+  - Firestore index missing causing query timeout
+  - Network issues or service degradation
+  - Function not deployed or trigger misconfigured
+
+inputs:
+  functionName:
+    type: string
+    required: true
+    description: "Function name (notifyOrderEvents, expireStaleOrders, etc.)"
+  orderId:
+    type: string
+    required: false
+    description: "Order ID for correlation (optional)"
+  correlationId:
+    type: string
+    required: false
+    description: "Correlation ID for tracing (optional)"
+  lookbackMinutes:
+    type: number
+    required: false
+    description: "How far back to look for execution logs (default: 60)"
+
+checks:
+  # Trace function execution
+  - atom: functions_invocation_trace
+    params:
+      functionName: "$inputs.functionName"
+      orderId: "$inputs.orderId"
+      correlationId: "$inputs.correlationId"
+      lookbackMinutes: 60
+    successCriteria:
+      - FUNCTION_EXECUTED
+      - NO_TIMEOUTS
+      - NO_ERRORS
+
+successMarkers:
+  - "Function executed successfully"
+  - "No timeout errors"
+  - "No execution errors"
+
+failureMappings:
+  FUNCTION_TIMEOUT:notifyOrderEvents: FAIL-006
+  FUNCTION_TIMEOUT:expireStaleOrders: FAIL-006
+  FUNCTION_TIMEOUT:aggregateDriverRating: FAIL-006
+  FUNCTION_ERROR:notifyOrderEvents: FAIL-006
+  FUNCTION_ERROR:expireStaleOrders: FAIL-006
+  FUNCTION_ERROR:aggregateDriverRating: FAIL-006
+  FUNCTION_TRACE_NOT_FOUND: FAIL-006

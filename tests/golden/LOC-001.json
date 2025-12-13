@@ -1,0 +1,41 @@
+{
+  "scenarioId": "LOC-001",
+  "status": "PASS",
+  "summary": "Scenario LOC-001 PASSED: all 2 checks passed",
+  "blockingReasons": [],
+  "evidence": [
+    {
+      "key": "driver.isOnline",
+      "expected": true,
+      "actual": true,
+      "sourcePath": "/drivers/driver_complete"
+    },
+    {
+      "key": "location.age",
+      "expected": "<= 60 minutes",
+      "actual": "0 minutes",
+      "sourcePath": "/driver_locations/driver_complete"
+    },
+    {
+      "key": "location.coordinates",
+      "expected": "valid GPS coordinates",
+      "actual": "lat: 24.7136, lng: 46.6753",
+      "sourcePath": "/driver_locations/driver_complete"
+    }
+  ],
+  "suggestedFixes": [],
+  "linkedFailures": [],
+  "checks": [
+    {
+      "atomName": "driver_online_state",
+      "passed": true
+    },
+    {
+      "atomName": "driver_location_freshness",
+      "passed": true
+    }
+  ],
+  "passedChecks": 2,
+  "totalChecks": 2,
+  "overallPass": true
+}

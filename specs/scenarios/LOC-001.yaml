@@ -1,0 +1,55 @@
+# Location Scenario: Validate Location Updates While Online
+# Ensures driver location is being tracked correctly
+
+scenarioId: LOC-001
+category: LOCATION
+title: "Location updates while driver is online"
+
+description: |
+  Validates that driver location is being tracked correctly while online.
+  Checks location document exists, coordinates are valid, and data is fresh.
+
+  Success criteria:
+  - Location document exists in /driver_locations/{driverId}
+  - Coordinates are valid (not 0,0, within bounds)
+  - Location timestamp is fresh (<5 minutes)
+  - Driver is online
+
+inputs:
+  driverId:
+    type: string
+    required: true
+    description: "Driver UID from Firebase Auth"
+  maxAgeMinutes:
+    type: number
+    required: false
+    description: "Maximum acceptable location age in minutes (default: 5)"
+
+checks:
+  # Check 1: Driver must be online for location to update
+  - atom: driver_online_state
+    params:
+      driverId: "$inputs.driverId"
+    successCriteria:
+      - DRIVER_ONLINE
+
+  # Check 2: Location freshness and validity
+  - atom: driver_location_freshness
+    params:
+      driverId: "$inputs.driverId"
+      maxAgeMinutes: 5
+    successCriteria:
+      - LOCATION_FRESH
+      - LOCATION_VALID
+
+successMarkers:
+  - "Driver location is being tracked"
+  - "Location data is fresh and valid"
+  - "Driver visible in geo-queries"
+
+failureMappings:
+  DRIVER_OFFLINE: FAIL-012
+  LOCATION_STALE: FAIL-008
+  LOCATION_MISSING: FAIL-009
+  LOCATION_INVALID_COORDS: FAIL-016
+  DRIVER_NOT_FOUND: FAIL-004

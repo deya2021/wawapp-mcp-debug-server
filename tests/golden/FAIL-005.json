@@ -1,0 +1,46 @@
+{
+  "scenarioId": "FAIL-005",
+  "status": "FAIL",
+  "summary": "Scenario FAIL-005 FAILED: 1 of 1 checks failed",
+  "blockingReasons": [
+    {
+      "ruleId": "FCM_TOKEN_STALE",
+      "severity": "WARNING",
+      "message": "FCM token is 104 days old (threshold: 60 days)",
+      "evidencePath": "/drivers/driver_stale_token",
+      "field": "fcmTokenUpdatedAt"
+    }
+  ],
+  "evidence": [
+    {
+      "key": "fcmTokenUpdatedAt",
+      "expected": "updated within 60 days",
+      "actual": "104 days old (last updated: 2025-09-01T10:00:00.000Z)",
+      "sourcePath": "/drivers/driver_stale_token"
+    }
+  ],
+  "suggestedFixes": [
+    {
+      "fixId": "FIX_REFRESH_STALE_TOKEN",
+      "description": "Ask user to logout and login to refresh stale FCM token (last updated 104 days ago)",
+      "targetPath": "/drivers/driver_stale_token",
+      "action": "MANUAL"
+    }
+  ],
+  "linkedFailures": [
+    {
+      "failureId": "FAIL-005",
+      "title": "FCM token missing or invalid",
+      "likelihood": "MEDIUM"
+    }
+  ],
+  "checks": [
+    {
+      "atomName": "fcm_token_health",
+      "passed": false
+    }
+  ],
+  "passedChecks": 0,
+  "totalChecks": 1,
+  "overallPass": false
+}

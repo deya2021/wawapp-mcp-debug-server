@@ -1,0 +1,36 @@
+{
+  "scenarioId": "FAIL-001",
+  "status": "PASS",
+  "summary": "Scenario FAIL-001 PASSED: all 2 checks passed (no index error detected in test environment)",
+  "blockingReasons": [],
+  "evidence": [
+    {
+      "key": "location.exists",
+      "expected": true,
+      "actual": true,
+      "sourcePath": "/driver_locations/driver_complete"
+    },
+    {
+      "key": "query.limit",
+      "expected": "> 0",
+      "actual": 50,
+      "sourcePath": "/orders"
+    }
+  ],
+  "suggestedFixes": [],
+  "linkedFailures": [],
+  "checks": [
+    {
+      "atomName": "driver_location_freshness",
+      "passed": true
+    },
+    {
+      "atomName": "nearby_orders_query_simulator",
+      "passed": true
+    }
+  ],
+  "passedChecks": 2,
+  "totalChecks": 2,
+  "overallPass": true,
+  "note": "Index errors only occur in production Firestore when composite index is missing. Test environment passes."
+}

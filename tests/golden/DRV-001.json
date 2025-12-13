@@ -1,0 +1,45 @@
+{
+  "scenarioId": "DRV-001",
+  "status": "PASS",
+  "summary": "Scenario DRV-001 PASSED: all 3 checks passed",
+  "blockingReasons": [],
+  "evidence": [
+    {
+      "key": "profile.completeness",
+      "expected": "all required fields present",
+      "actual": "complete",
+      "sourcePath": "/drivers/driver_complete"
+    },
+    {
+      "key": "driver.isOnline",
+      "expected": true,
+      "actual": true,
+      "sourcePath": "/drivers/driver_complete"
+    },
+    {
+      "key": "location.age",
+      "expected": "<= 5 minutes",
+      "actual": "0 minutes",
+      "sourcePath": "/driver_locations/driver_complete"
+    }
+  ],
+  "suggestedFixes": [],
+  "linkedFailures": [],
+  "checks": [
+    {
+      "atomName": "driver_profile_audit",
+      "passed": true
+    },
+    {
+      "atomName": "driver_online_state",
+      "passed": true
+    },
+    {
+      "atomName": "driver_location_freshness",
+      "passed": true
+    }
+  ],
+  "passedChecks": 3,
+  "totalChecks": 3,
+  "overallPass": true
+}

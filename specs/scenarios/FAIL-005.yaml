@@ -1,0 +1,53 @@
+# FCM Token Invalid Scenario
+# Detects when driver/user has invalid or missing FCM token
+
+scenarioId: FAIL-005
+category: FAILURE
+title: "FCM token invalid or missing - user cannot receive notifications"
+
+description: |
+  Detects when user has invalid or missing FCM token.
+  This prevents the user from receiving push notifications.
+
+  Common causes:
+  - User never granted notification permissions
+  - App was reinstalled and token not refreshed
+  - Token expired (stale > 60 days)
+  - Token corrupted or invalid format
+
+inputs:
+  userId:
+    type: string
+    required: true
+    description: "User ID (client or driver)"
+  userType:
+    type: string
+    required: false
+    description: "User type: client or driver (default: driver)"
+  staleThresholdDays:
+    type: number
+    required: false
+    description: "Staleness threshold in days (default: 60)"
+
+checks:
+  # Check FCM token health
+  - atom: fcm_token_health
+    params:
+      userId: "$inputs.userId"
+      userType: "$inputs.userType"
+      staleThresholdDays: 60
+    successCriteria:
+      - FCM_TOKEN_EXISTS
+      - FCM_TOKEN_VALID
+      - FCM_TOKEN_FRESH
+
+successMarkers:
+  - "FCM token exists and is valid"
+  - "Token is fresh (updated recently)"
+  - "User can receive notifications"
+
+failureMappings:
+  FCM_TOKEN_MISSING: FAIL-005
+  FCM_TOKEN_STALE: FAIL-005
+  FCM_TOKEN_INVALID_FORMAT: FAIL-005
+  PROFILE_NOT_FOUND: FAIL-004

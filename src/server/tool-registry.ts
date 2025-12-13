@@ -10,6 +10,9 @@ import * as kit6 from '../kits/kit6-cloud-functions/index.js';
 import * as kit7 from '../kits/kit7-system-health/index.js';
 import * as kit8 from '../kits/kit8-auth-flow/index.js';
 
+// Import Phase 1 orchestrator
+import { scenarioRun, scenarioRunSchema } from '../orchestrator/index.js';
+
 export interface Tool {
   name: string;
   description: string;
@@ -306,6 +309,22 @@ export function getTools(): Tool[] {
         kit8.multiDeviceSessionAuditSchema.name,
         kit8.multiDeviceSessionAudit
       ),
+    },
+
+    // Phase 1 MVP: Scenario Orchestrator
+    {
+      name: scenarioRunSchema.name,
+      description: scenarioRunSchema.description,
+      inputSchema: scenarioRunSchema.inputSchema,
+      handler: applyMiddleware(scenarioRunSchema.name, scenarioRun),
+    },
+
+    // Phase 1 MVP: Enhanced Order Visibility (v2)
+    {
+      name: kit2.orderVisibilityV2Schema.name,
+      description: kit2.orderVisibilityV2Schema.description,
+      inputSchema: kit2.orderVisibilityV2Schema.inputSchema,
+      handler: applyMiddleware(kit2.orderVisibilityV2Schema.name, kit2.orderVisibilityV2),
     },
   ];
 

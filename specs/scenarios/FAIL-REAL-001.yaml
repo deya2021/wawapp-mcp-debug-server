@@ -1,0 +1,87 @@
+# Real Production Incident: Order Visibility Failure
+# Incident: Order in "matching" status not visible to driver
+# Root causes: (1) Driver profile missing name field, (2) Driver location stale (~406 hours)
+
+scenarioId: FAIL-REAL-001
+category: FAILURE
+title: "Real incident: Driver can't see order due to profile + location issues"
+
+description: |
+  Reproduces actual production incident where order was in matching status
+  but invisible to driver due to:
+  1. Missing profile field (name)
+  2. Stale location data (last update ~406 hours ago)
+
+  This scenario validates the complete order visibility diagnostic chain.
+
+inputs:
+  driverId:
+    type: string
+    required: true
+    description: "Driver UID from Firebase Auth"
+  orderId:
+    type: string
+    required: true
+    description: "Order ID in matching status"
+
+checks:
+  # Check 1: Driver profile completeness
+  - atom: driver_profile_audit
+    params:
+      driverId: "$inputs.driverId"
+    successCriteria:
+      - PROFILE_COMPLETE
+      - DRIVER_VERIFIED
+    # Expected to FAIL: PROFILE_MISSING:name
+
+  # Check 2: Driver location freshness
+  - atom: driver_location_freshness
+    params:
+      driverId: "$inputs.driverId"
+      maxAgeMinutes: 5
+    successCriteria:
+      - LOCATION_FRESH
+    # Expected to FAIL: LOCATION_STALE (406 hours > 5 minutes)
+
+  # Check 3: Driver online state
+  - atom: driver_online_state
+    params:
+      driverId: "$inputs.driverId"
+    successCriteria:
+      - DRIVER_ONLINE
+    # May pass or fail depending on driver state
+
+  # Check 4: Order state validation
+  - atom: order_state_audit
+    params:
+      orderId: "$inputs.orderId"
+    successCriteria:
+      - ORDER_IN_MATCHING_POOL
+    # Should PASS (order is in matching status)
+
+  # Check 5: Matching rule trace
+  - atom: matching_rule_trace
+    params:
+      orderId: "$inputs.orderId"
+      driverId: "$inputs.driverId"
+      radiusKm: 6.0
+    successCriteria:
+      - ORDER_WITHIN_RADIUS
+    # May pass or fail depending on distance
+
+successMarkers:
+  - "All checks passed"
+  - "Driver can see order"
+  - "Order visible in driver's nearby orders list"
+
+failureMappings:
+  PROFILE_MISSING:name: FAIL-005
+  PROFILE_MISSING:phone: FAIL-006
+  PROFILE_MISSING:city: FAIL-007
+  PROFILE_MISSING:region: FAIL-007
+  LOCATION_STALE: FAIL-008
+  LOCATION_MISSING: FAIL-009
+  DRIVER_OFFLINE: FAIL-012
+  DRIVER_NOT_VERIFIED: FAIL-003
+  ORDER_NOT_IN_MATCHING_POOL: FAIL-011
+  ORDER_OUTSIDE_RADIUS: FAIL-030

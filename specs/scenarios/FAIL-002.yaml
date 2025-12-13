@@ -1,0 +1,36 @@
+# Unbounded Query Scenario
+# Detects when query is executed without limit parameter
+
+scenarioId: FAIL-002
+category: FAILURE
+title: "Unbounded query executed without limit"
+
+description: |
+  Detects when Firestore query is executed without a limit parameter.
+  This can cause performance issues, excessive costs, and timeout errors.
+
+  Best practice: Always set a reasonable limit (50-100) on queries.
+
+inputs:
+  driverId:
+    type: string
+    required: true
+    description: "Driver UID for query simulation"
+
+checks:
+  # Check 1: Simulate query without limit
+  - atom: nearby_orders_query_simulator
+    params:
+      driverId: "$inputs.driverId"
+      radiusKm: 6.0
+      # Note: no limit specified - triggers QUERY_UNBOUNDED:NO_LIMIT
+    successCriteria:
+      - QUERY_BOUNDED
+
+successMarkers:
+  - "Query has reasonable limit"
+  - "No unbounded query warnings"
+
+failureMappings:
+  QUERY_UNBOUNDED:NO_LIMIT: FAIL-002
+  LOCATION_MISSING: FAIL-009

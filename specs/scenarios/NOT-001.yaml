@@ -1,0 +1,80 @@
+# Notification Delivery Scenario
+# Validates driver receives order notification when order is accepted
+
+scenarioId: NOT-001
+category: NOTIFICATION
+title: "Driver receives order notification when order accepted"
+
+description: |
+  End-to-end notification delivery check for driver.
+  Validates:
+  - Driver has valid FCM token
+  - Notification delivery infrastructure is working
+  - Function execution trace shows notification was sent
+
+  This scenario verifies the complete notification pipeline:
+  1. Driver has valid, fresh FCM token
+  2. notifyOrderEvents function executed successfully
+  3. Notification delivery audit shows send attempt
+
+inputs:
+  driverId:
+    type: string
+    required: true
+    description: "Driver UID who should receive notification"
+  orderId:
+    type: string
+    required: true
+    description: "Order ID that triggered notification"
+  recipientType:
+    type: string
+    required: false
+    description: "Recipient type (default: driver)"
+
+checks:
+  # Check 1: Driver has valid FCM token
+  - atom: fcm_token_health
+    params:
+      userId: "$inputs.driverId"
+      userType: "driver"
+      staleThresholdDays: 60
+    successCriteria:
+      - FCM_TOKEN_EXISTS
+      - FCM_TOKEN_VALID
+      - FCM_TOKEN_FRESH
+
+  # Check 2: notifyOrderEvents function executed
+  - atom: functions_invocation_trace
+    params:
+      functionName: "notifyOrderEvents"
+      orderId: "$inputs.orderId"
+      lookbackMinutes: 30
+    successCriteria:
+      - FUNCTION_EXECUTED
+      - NO_ERRORS
+      - NO_TIMEOUTS
+
+  # Check 3: Notification delivery audit
+  - atom: notification_delivery_audit
+    params:
+      orderId: "$inputs.orderId"
+      recipientId: "$inputs.driverId"
+      recipientType: "driver"
+    successCriteria:
+      - NOTIFICATION_SENT
+      - NO_SEND_FAILURES
+
+successMarkers:
+  - "Driver has valid FCM token"
+  - "notifyOrderEvents function executed successfully"
+  - "Notification sent to driver"
+
+failureMappings:
+  FCM_TOKEN_MISSING: FAIL-005
+  FCM_TOKEN_STALE: FAIL-005
+  FCM_TOKEN_INVALID_FORMAT: FAIL-005
+  FUNCTION_TIMEOUT:notifyOrderEvents: FAIL-006
+  FUNCTION_ERROR:notifyOrderEvents: FAIL-006
+  FUNCTION_TRACE_NOT_FOUND: FAIL-006
+  NOTIFICATION_SEND_NO_EVIDENCE: FAIL-006
+  FCM_SEND_FAILED: FAIL-005

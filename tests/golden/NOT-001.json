@@ -1,0 +1,69 @@
+{
+  "scenarioId": "NOT-001",
+  "status": "INCONCLUSIVE",
+  "summary": "Scenario NOT-001 INCONCLUSIVE: 2 of 3 checks inconclusive",
+  "blockingReasons": [
+    {
+      "ruleId": "FUNCTION_TRACE_NOT_FOUND",
+      "severity": "WARNING",
+      "message": "No execution trace found for function notifyOrderEvents (no logging infrastructure)",
+      "evidencePath": "/function_logs"
+    }
+  ],
+  "evidence": [
+    {
+      "key": "fcmToken.health",
+      "expected": "valid and fresh",
+      "actual": "valid, 0 days old",
+      "sourcePath": "/drivers/driver_complete"
+    },
+    {
+      "key": "function_logs.collection",
+      "expected": "collection exists with logs",
+      "actual": "collection not found or empty",
+      "sourcePath": "/function_logs"
+    },
+    {
+      "key": "notification_logs.collection",
+      "expected": "collection exists with logs",
+      "actual": "collection not found or empty",
+      "sourcePath": "/notification_logs"
+    }
+  ],
+  "suggestedFixes": [
+    {
+      "fixId": "FIX_ADD_FUNCTION_LOGGING",
+      "description": "Add minimal function execution logging to notifyOrderEvents",
+      "action": "MANUAL"
+    },
+    {
+      "fixId": "FIX_ADD_NOTIFICATION_LOGGING",
+      "description": "Add minimal notification logging to Cloud Function",
+      "action": "MANUAL"
+    }
+  ],
+  "linkedFailures": [
+    {
+      "failureId": "FAIL-006",
+      "title": "Function timeout or error",
+      "likelihood": "MEDIUM"
+    }
+  ],
+  "checks": [
+    {
+      "atomName": "fcm_token_health",
+      "passed": true
+    },
+    {
+      "atomName": "functions_invocation_trace",
+      "passed": false
+    },
+    {
+      "atomName": "notification_delivery_audit",
+      "passed": false
+    }
+  ],
+  "passedChecks": 1,
+  "totalChecks": 3,
+  "overallPass": false
+}

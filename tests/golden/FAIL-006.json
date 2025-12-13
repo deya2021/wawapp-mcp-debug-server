@@ -1,0 +1,44 @@
+{
+  "scenarioId": "FAIL-006",
+  "status": "INCONCLUSIVE",
+  "summary": "Scenario FAIL-006 INCONCLUSIVE: 1 of 1 checks inconclusive",
+  "blockingReasons": [
+    {
+      "ruleId": "FUNCTION_TRACE_NOT_FOUND",
+      "severity": "WARNING",
+      "message": "No execution trace found for function notifyOrderEvents (no logging infrastructure)",
+      "evidencePath": "/function_logs"
+    }
+  ],
+  "evidence": [
+    {
+      "key": "function_logs.collection",
+      "expected": "collection exists with logs",
+      "actual": "collection not found or empty",
+      "sourcePath": "/function_logs"
+    }
+  ],
+  "suggestedFixes": [
+    {
+      "fixId": "FIX_ADD_FUNCTION_LOGGING",
+      "description": "Add minimal function execution logging to notifyOrderEvents",
+      "action": "MANUAL"
+    }
+  ],
+  "linkedFailures": [
+    {
+      "failureId": "FAIL-006",
+      "title": "Function timeout or error",
+      "likelihood": "MEDIUM"
+    }
+  ],
+  "checks": [
+    {
+      "atomName": "functions_invocation_trace",
+      "passed": false
+    }
+  ],
+  "passedChecks": 0,
+  "totalChecks": 1,
+  "overallPass": false
+}

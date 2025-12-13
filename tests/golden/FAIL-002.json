@@ -1,0 +1,44 @@
+{
+  "scenarioId": "FAIL-002",
+  "status": "FAIL",
+  "summary": "Scenario FAIL-002 FAILED: 1 of 1 checks failed",
+  "blockingReasons": [
+    {
+      "ruleId": "QUERY_UNBOUNDED:NO_LIMIT",
+      "severity": "WARNING",
+      "message": "Query executed without limit parameter. This may cause performance issues.",
+      "evidencePath": "/orders"
+    }
+  ],
+  "evidence": [
+    {
+      "key": "query.limit",
+      "expected": "> 0",
+      "actual": null,
+      "sourcePath": "/orders"
+    }
+  ],
+  "suggestedFixes": [
+    {
+      "fixId": "FIX_ADD_QUERY_LIMIT",
+      "description": "Add limit parameter to query (recommended: 50-100)",
+      "action": "SET"
+    }
+  ],
+  "linkedFailures": [
+    {
+      "failureId": "FAIL-002",
+      "title": "Query unbounded (no limit)",
+      "likelihood": "MEDIUM"
+    }
+  ],
+  "checks": [
+    {
+      "atomName": "nearby_orders_query_simulator",
+      "passed": false
+    }
+  ],
+  "passedChecks": 0,
+  "totalChecks": 1,
+  "overallPass": false
+}

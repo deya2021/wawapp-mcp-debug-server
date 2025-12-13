@@ -1,0 +1,44 @@
+# Permission Denied Scenario
+# Detects when Firestore security rules block access
+
+scenarioId: FAIL-015
+category: FAILURE
+title: "Firestore permission denied - security rules blocking access"
+
+description: |
+  Detects when Firestore security rules deny read access to a path.
+
+  Note: This probe has limitations when run from server-side admin SDK.
+  It returns INCONCLUSIVE if access succeeds (admin SDK bypasses rules).
+  Use this to document expected client-side permission patterns.
+
+inputs:
+  principalId:
+    type: string
+    required: true
+    description: "User/driver ID (principal requesting access)"
+  targetPath:
+    type: string
+    required: true
+    description: "Firestore path to check (e.g., /drivers/abc123)"
+  checkName:
+    type: string
+    required: false
+    description: "Name for this permission check (for logging)"
+
+checks:
+  # Permission probe
+  - atom: permission_rule_probe
+    params:
+      checkName: "driver_read_own_profile"
+      principalId: "$inputs.principalId"
+      targetPath: "$inputs.targetPath"
+    successCriteria:
+      - ACCESS_ALLOWED
+
+successMarkers:
+  - "Access granted"
+  - "No permission errors"
+
+failureMappings:
+  PERMISSION_DENIED: FAIL-015
