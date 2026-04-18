@@ -9,6 +9,7 @@ import * as kit5 from '../kits/kit5-notifications/index.js';
 import * as kit6 from '../kits/kit6-cloud-functions/index.js';
 import * as kit7 from '../kits/kit7-system-health/index.js';
 import * as kit8 from '../kits/kit8-auth-flow/index.js';
+import * as kit10 from '../kits/kit10-advanced-diagnostics/index.js';
 
 // Import Phase 1 orchestrator
 import { scenarioRun, scenarioRunSchema } from '../orchestrator/index.js';
@@ -325,6 +326,26 @@ export function getTools(): Tool[] {
       description: kit2.orderVisibilityV2Schema.description,
       inputSchema: kit2.orderVisibilityV2Schema.inputSchema,
       handler: applyMiddleware(kit2.orderVisibilityV2Schema.name, kit2.orderVisibilityV2),
+    },
+
+    // Kit 10: Advanced Diagnostics
+    {
+      name: kit10.notificationAnalyticsSchema.name,
+      description: kit10.notificationAnalyticsSchema.description,
+      inputSchema: kit10.notificationAnalyticsSchema.inputSchema,
+      handler: applyMiddleware(
+        kit10.notificationAnalyticsSchema.name,
+        kit10.notificationAnalytics
+      ),
+    },
+    {
+      name: kit10.raceConditionDetectorSchema.name,
+      description: kit10.raceConditionDetectorSchema.description,
+      inputSchema: kit10.raceConditionDetectorSchema.inputSchema,
+      handler: applyMiddleware(
+        kit10.raceConditionDetectorSchema.name,
+        kit10.raceConditionDetector
+      ),
     },
   ];
 

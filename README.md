@@ -636,6 +636,32 @@ Recommendation: Check expireStaleOrders scheduler
 
 ---
 
+### Kit 10: Advanced Diagnostics (2 tools)
+
+**`wawapp_notification_analytics`** - Deep notification delivery analytics
+Comprehensive FCM notification analytics: delivery rates, platform breakdown, failure reasons, multi-device detection, hourly timeline, and problematic users.
+
+```json
+{
+  "timeRangeMinutes": 1440,
+  "userType": "driver",
+  "notificationType": "new_order"
+}
+```
+
+**`wawapp_race_condition_detector`** - Detect race conditions
+Detect concurrent writes, duplicate driver assignments, conflicting status transitions, Firestore transaction failures, and simultaneous cancel/accept races.
+
+```json
+{
+  "timeRangeMinutes": 60,
+  "sensitivityMs": 2000,
+  "orderId": "order_abc123"
+}
+```
+
+---
+
 ## Security & Limitations
 
 ### Read-Only Guarantee
@@ -746,6 +772,9 @@ Choose tools based on your debugging scenario:
 | **"AuthGate rebuild loop"** | `wawapp_auth_loop_detector`, `wawapp_auth_flow_audit` |
 | **"Need full diagnostic report"** | `wawapp_incident_report` (comprehensive first-line diagnostic) |
 | **"Unknown user issue"** | `wawapp_incident_report` (aggregates all subsystems) |
+| **"Notifications not reaching users"** | `wawapp_notification_analytics` |
+| **"Duplicate orders/assignments"** | `wawapp_race_condition_detector` |
+| **"Concurrent update bugs"** | `wawapp_race_condition_detector` |
 
 ---
 
@@ -762,11 +791,12 @@ Choose tools based on your debugging scenario:
 │  │  Security Layer (Rate Limiting, PII Masking, Audit)  │   │
 │  └──────────────────────────────────────────────────────┘   │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │         33 Tools across 8 Kits                       │   │
+│  │         35 Tools across 10 Kits                      │   │
 │  │  - Order Lifecycle (4)    - Location Intelligence (3) │   │
 │  │  - Driver Matching (5)    - Notifications (4)        │   │
 │  │  - Data Quality (3)       - Cloud Functions (3)      │   │
 │  │  - System Health (5)      - Auth & App Flow (6)     │   │
+│  │  - Scenario Atoms (int)   - Advanced Diagnostics (2) │   │
 │  └──────────────────────────────────────────────────────┘   │
 └──────────────────────┬──────────────────────────────────────┘
                        │ Firebase Admin SDK
@@ -782,13 +812,15 @@ Choose tools based on your debugging scenario:
 
 ## Deployment Status
 
-**Current Version**: 1.2.0
+**Current Version**: 1.3.0
 **Status**: Production Ready
-**Tools**: 33/33 (100% Complete)
-**Kits**: 8
+**Tools**: 35/35 (100% Complete)
+**Kits**: 10
 **Build Status**: Passing
 
-All 33 debugging tools are implemented, tested, and ready for production use.
+All 35 debugging tools are implemented, tested, and ready for production use.
+
+**New in v1.3.0**: Kit 10 adds 2 advanced diagnostics tools — `wawapp_notification_analytics` (deep FCM delivery analytics) and `wawapp_race_condition_detector` (concurrent write/race condition detection).
 
 **New in v1.2.0**: Added `wawapp_incident_report` - a unified meta-tool that aggregates signals from all subsystems for comprehensive first-line diagnostics.
 
